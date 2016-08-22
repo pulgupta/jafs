@@ -14,7 +14,8 @@ hs_err_pid*
 #non code directories
 .recommenders/
 .metadata/
-.DS_Store/
-/**/DS_Store/
+.DS_Store
+/**/.DS_Store/
 /**/recommenders/
 /**/.metadata/
+/**/target
