@@ -1,7 +1,10 @@
 package com.example.jafs.dao.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -39,7 +42,7 @@ public class FileDataManipulation implements DataManipulation {
 			if(RepoController.getRepoPath().equals(""))
 				return false;
 
-			File file = new File(RepoController.getRepoPath() + "endpoints.py");
+			File file = new File(RepoController.getRepoPath() + "/endpoints.py");
 			try(Scanner in = new Scanner(file)){
 				while(in.hasNextLine()){
 					String line = in.nextLine();
@@ -54,13 +57,33 @@ public class FileDataManipulation implements DataManipulation {
 			//We have checked and we have not found the end point
 			//We can now add the end point in the python file.
 			logger.info("Endpoint not found lets add!!!!");
-			String line1 = "@app.route('" + endpoint.getEndpointUrl() + "')";
-			String line2 = "def hello_world_" + ++counter +"():";
-			String line3 = "/t return " + endpoint.getJsonBody();
+			String line1 = "\n@app.route('" + endpoint.getEndpointUrl() + "')\n";
+			String line2 = "def hello_world_" + ++counter +"():\n";
+			String line3 = "\treturn '" + endpoint.getJsonBody() +"'\n\n";
+			
+			Scanner in = new Scanner(file);
+			File file_temp = new File(RepoController.getRepoPath() + "/endpoints_temp.py");
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file_temp, true));
+			while(in.hasNextLine()){
+				String line = in.nextLine();
+				if(line.equals("if __name__ == '__main__':")){
+					bw.append(line1);
+					bw.append(line2);
+					bw.append(line3);
+				}
+				
+				bw.write(line + "\n");
+			}
+			bw.close();
+			in.close();
+			Runtime.getRuntime().exec("mv " + RepoController.getRepoPath() + "/endpoints_temp.py " + RepoController.getRepoPath() +  "/endpoints.py");
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return true;
 	}

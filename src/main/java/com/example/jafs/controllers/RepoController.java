@@ -39,8 +39,7 @@ public class RepoController {
 		logger.info("Destination is " + dest.toPath());
 		try {
 			Files.copy(file.toPath(), dest.toPath());
-			@SuppressWarnings("unused")
-			Process p = Runtime.getRuntime().exec("sudo python " + dest.toPath() + " &");
+			Runtime.getRuntime().exec("/usr/bin/python " + dest.toPath() + " &");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
