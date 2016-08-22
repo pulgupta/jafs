@@ -29,7 +29,7 @@ import com.example.jafs.entity.Endpoint;
 public class FileDataManipulation implements DataManipulation {
 
 	Logger logger = LoggerFactory.getLogger(EndpointControllers.class);
-	
+	private static int counter =0;
 	@Override
 	//Check if the end point is already there
 	//In case it is already there throw an error
@@ -54,6 +54,9 @@ public class FileDataManipulation implements DataManipulation {
 			//We have checked and we have not found the end point
 			//We can now add the end point in the python file.
 			logger.info("Endpoint not found lets add!!!!");
+			String line1 = "@app.route('" + endpoint.getEndpointUrl() + "')";
+			String line2 = "def hello_world_" + ++counter +"():";
+			String line3 = "/t return " + endpoint.getJsonBody();
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class RepoController {
 	Logger logger = LoggerFactory.getLogger(RepoController.class);
 	
 	@RequestMapping(value="/setPath", method = POST, consumes="application/json")
-	public HttpStatus setRepo(@RequestBody Repository path) {
+	public ResponseEntity<String> setRepo(@RequestBody Repository path) {
 		RepoController.repoPath = path.getEndpointUrl();
 		//Copy the initial files at the location
 		ClassLoader classLoader = getClass().getClassLoader();
@@ -38,12 +39,14 @@ public class RepoController {
 		logger.info("Destination is " + dest.toPath());
 		try {
 			Files.copy(file.toPath(), dest.toPath());
-		} 
-		catch (IOException e) {
-			return HttpStatus.INTERNAL_SERVER_ERROR;
+			@SuppressWarnings("unused")
+			Process p = Runtime.getRuntime().exec("sudo python " + dest.toPath() + " &");
 		}
-		
-		return HttpStatus.OK;
+		catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	public static String getRepoPath() {
