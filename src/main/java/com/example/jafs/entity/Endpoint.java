@@ -41,6 +41,10 @@ public class Endpoint {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Endpoint [endpointUrl=" + endpointUrl + ", jsonBody=" + jsonBody + ", fileName=" + fileName + "]";
+	}
 	
 }

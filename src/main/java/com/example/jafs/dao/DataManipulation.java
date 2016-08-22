@@ -14,10 +14,8 @@ import com.example.jafs.entity.Endpoint;
  */
 public interface DataManipulation {
 	
-	public boolean addEndpoint(Endpoint endpoint);
-	public boolean listEndpoint(Endpoint endpoint);
-	public boolean editEndpoint(Endpoint endpoint);
-	
-	
+	public boolean addEndpoint(Endpoint endpoint) throws Exception;
+	public boolean listEndpoint(Endpoint endpoint) throws Exception;
+	public boolean editEndpoint(Endpoint endpoint) throws Exception;
 
 }
